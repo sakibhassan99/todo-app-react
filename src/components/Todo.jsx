@@ -1,13 +1,38 @@
-import { useState } from "react";
 import { FcTodoList } from "react-icons/fc";
 import { MdDarkMode } from "react-icons/md";
 
-export default function Todo({ setTodos, error, setError }) {
-  const [input, setInput] = useState("");
+export default function Todo({
+  setTodos,
+  error,
+  setError,
+  input,
+  setInput,
+  editingId,
+  setEditingId,
+}) {
   function handleOnAdd() {
-    if (input) {
-      setTodos((prevState) => [...prevState, input]);
+    if (editingId) {
+      setTodos((prevState) => {
+        return prevState.map((state) => {
+          if (state.id === editingId) {
+            return { ...state, input };
+          } else {
+            return state;
+          }
+        });
+      });
       setInput("");
+      setEditingId("");
+      return;
+    }
+
+    if (input) {
+      setTodos((prevState) => [
+        ...prevState,
+        { input, id: crypto.randomUUID() },
+      ]);
+      setInput("");
+      setEditingId("");
     } else {
       setError(true);
     }
@@ -37,7 +62,7 @@ export default function Todo({ setTodos, error, setError }) {
           className="bg-[#8758ff] text-white px-4 rounded"
           onClick={handleOnAdd}
         >
-          Add Todo
+          {editingId ? "Edit Todo" : "Add Todo"}
         </button>
         <p
           className={`${

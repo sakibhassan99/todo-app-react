@@ -1,5 +1,6 @@
+import { useState } from "react";
 import { FcTodoList } from "react-icons/fc";
-import { MdDarkMode } from "react-icons/md";
+import { MdDarkMode, MdLightMode } from "react-icons/md";
 
 export default function Todo({
   setTodos,
@@ -9,6 +10,9 @@ export default function Todo({
   setInput,
   editingId,
   setEditingId,
+  todos,
+  isDark,
+  setIsDark,
 }) {
   function handleOnAdd() {
     if (editingId) {
@@ -37,11 +41,18 @@ export default function Todo({
       setError(true);
     }
   }
+  localStorage.setItem("todos", JSON.stringify(todos));
 
   return (
     <>
-      <div className="absolute text-xl cursor-pointer top-4 right-5">
-        <MdDarkMode />
+      <div
+        className="absolute text-xl cursor-pointer top-4 right-5"
+        onClick={() => {
+          setIsDark(!isDark);
+          localStorage.setItem("isDark", JSON.parse(!isDark));
+        }}
+      >
+        {isDark ? <MdLightMode /> : <MdDarkMode />}
       </div>
       <h1 className="flex items-center gap-2 mb-8 text-3xl font-medium center">
         To-Do List <FcTodoList />
@@ -56,10 +67,14 @@ export default function Todo({
           placeholder="Enter Text Here!"
           autoFocus
           type="text"
-          className="flex-1 w-full p-3 outline-none text-slate-950 bg-[#edeef9]"
+          className={`flex-1 w-full p-3 outline-none text-slate-950 ${
+            isDark ? "bg-[#303952] text-white" : "bg-[#edeef9]"
+          }`}
         />
         <button
-          className="bg-[#8758ff] text-white px-4 rounded"
+          className={`${
+            isDark ? "bg-[#40407a]" : "bg-[#8758ff]"
+          } text-white px-4 rounded`}
           onClick={handleOnAdd}
         >
           {editingId ? "Edit Todo" : "Add Todo"}

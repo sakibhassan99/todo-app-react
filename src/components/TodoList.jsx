@@ -10,6 +10,7 @@ export default function TodoList({
   setError,
   setInput,
   setEditingId,
+  isDark,
 }) {
   const handleToggleChecked = (id) => {
     setTodos((prevState) =>
@@ -24,11 +25,15 @@ export default function TodoList({
         if (todo) {
           return (
             <li
-              onClick={() => handleToggleChecked(todo.id)}
+              onClick={() => {
+                handleToggleChecked(todo.id);
+              }}
               key={todo.id}
               className={`${
                 todo.checked ? "line-through" : ""
-              } text-white select-none cursor-pointer flex px-4 justify-between items-center bg-[#8758ff] p-2 rounded`}
+              } text-white select-none cursor-pointer flex px-4 justify-between items-center ${
+                isDark ? "bg-[#2f3542]" : "bg-[#8758ff]"
+              } p-2 rounded`}
             >
               <div className="flex items-center gap-2">
                 {todo.checked ? (
@@ -40,7 +45,8 @@ export default function TodoList({
               </div>
               <div className="flex gap-4">
                 <i
-                  onClick={() => {
+                  onClick={(e) => {
+                    e.stopPropagation();
                     setEditingId(todo.id);
                     setInput(todo.input);
                   }}
@@ -48,7 +54,8 @@ export default function TodoList({
                   <FaEdit />
                 </i>
                 <i
-                  onClick={() => {
+                  onClick={(e) => {
+                    e.stopPropagation();
                     setTodos((prevState) =>
                       prevState.filter((state) => state.id !== todo.id)
                     );
